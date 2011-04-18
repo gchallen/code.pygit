@@ -24,7 +24,7 @@ command = "git remote -v"
 print >>debug, command
 remotes = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 remotes = remotes.communicate()[0].splitlines()
-serverpattern = re.compile("gitosis@([^:]+):(\S+)")
+serverpattern = re.compile(r"gitosis@([^\/:]+)(:|\/\/)(\S+)")
 
 # 18 Apr 2011 : GWA : Split into first and second remote.
 
@@ -40,7 +40,7 @@ if servermatch == None:
 firstserver = servermatch.group(1).strip()
 if firstserver != serverfrom:
   sys.exit(1)
-firsturl = servermatch.group(2).strip()
+firsturl = servermatch.group(3).strip()
 firsttype = firstremote[2].strip()
 
 secondname = secondremote[0].strip()
@@ -50,7 +50,7 @@ if servermatch == None:
 secondserver = servermatch.group(1).strip()
 if secondserver != serverfrom:
   sys.exit(1)
-secondurl = servermatch.group(2).strip()
+secondurl = servermatch.group(3).strip()
 secondtype = secondremote[2].strip()
 
 if firstserver != secondserver:
